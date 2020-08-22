@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue"></script>
+    <title>NoteApp</title>
+</head>
+<body>
+    <div id="app">
+        <h1>{{title}}</h1>
+
+        <div class="message" v-if="message">
+            <p>{{message}}</p>
+        </div>
+        <!-- new note -->
+        <div class="new-note">
+            <input v-model="note.title" type="text">
+            <textarea v-model="note.description" class="note-description"></textarea>
+            <button @click="addNote">New note</button>
+        </div>
+        <!-- note list -->
+        <div class="notes">
+            <!-- получаем все объекты из массива data.notes -->
+            <div class="note" v-for="(note, index) in notes" :key="index">
+                <div class="note-header">
+                    <!-- вывод заголовка data.notes.title -->
+                    <p>{{note.title}}</p>
+                </div>
+                <div class="note-body">
+                    <!-- вывод описания data.notes.description -->
+                    <p>{{note.description}}</p>
+                    <!-- вывод даты data.notes.date -->
+                    <span>{{note.date}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                title: 'Notes app',
+                message: null,
+                // создаём массив заметок notes
+                note: {
+                    title: '',
+                    description: ''
+                },
+                notes: [
+                    {
+                        title: 'First Note',
+                        description: 'Description for First Note',
+                        date: new Date(Date.now()).toLocaleString()
+                    },                    {
+                        title: 'Second Note',
+                        description: 'Description for Second Note',
+                        date: new Date(Date.now()).toLocaleString()
+                    },                    {
+                        title: 'Third Note',
+                        description: 'Description for Third Note',
+                        date: new Date(Date.now()).toLocaleString()
+                    },
+                ]
+            },
+            methods: {
+                addNote () {
+                    let {title, description} = this.note; // присвоение значение нескольким переменным
+                    let noteDescriptionLength = document.querySelector('.note-description').innerHTML.length; // и так сойдёт
+
+                    if (title === '') {
+                        this.message = 'title can`t be blank!';
+                        return false;
+                    }
+                    if (noteDescriptionLength < 3) {
+                        this.message = 'description  minimal length 3 characters ';
+                        return false;
+                    }
+
+                    this.notes.push({
+                        title, // синтаксис ES6 позволяет опускать имя объекта, есле оно совпадает с ключом
+                        description,
+                        date: new Date(Date.now()).toLocaleString()
+                    })
+                    this.note.title = '';
+                    this.note.description = '';
+                    this.message = null;
+                }
+            },
+        })
+    </script>
+</body>
+</html>
